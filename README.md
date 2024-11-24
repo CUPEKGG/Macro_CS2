@@ -1,6 +1,7 @@
 # MACRO_CS2
 
 This is not a cheat - an icon will appear on your toolbar
+-the program will create a cfg file automatically
 
 key patterns: 
 F1 jumpthrow normal
