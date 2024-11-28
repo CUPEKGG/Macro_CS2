@@ -1,0 +1,50 @@
+#include <windows.h>
+#include <iostream>
+#include <thread>
+#include <unordered_map>
+
+// Map para rastrear o estado das teclas
+std::unordered_map<char, bool> keyStates = {
+    {'W', false},
+    {'A', false},
+    {'S', false},
+    {'D', false},
+};
+
+// Função para verificar o estado das teclas
+void updateKeyState(char key, bool isPressed) {
+    keyStates[key] = isPressed;
+    if (isPressed) {
+        std::cout << "Tecla " << key << " pressionada: Movendo...\n";
+    } else {
+        std::cout << "Tecla " << key << " liberada: Parando imediatamente!\n";
+    }
+}
+
+// Função principal para monitorar teclas
+void monitorKeys() {
+    while (true) {
+        // Verifica o estado de cada tecla
+        for (auto& key : keyStates) {
+            short state = GetAsyncKeyState(key.first);
+            bool isPressed = state & 0x8000;
+
+            // Atualiza o estado apenas se houver mudança
+            if (isPressed != key.second) {
+                updateKeyState(key.first, isPressed);
+            }
+        }
+        // Pequena pausa para evitar alto uso de CPU
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+}
+
+int main() {
+    std::cout << "Autostop para CS2 (Teste): Pressione W, A, S ou D.\n";
+    std::cout << "Libere as teclas para parar imediatamente.\n";
+
+    // Iniciar a monitoração das teclas
+    monitorKeys();
+
+    return 0;
+}
